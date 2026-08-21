@@ -1,0 +1,14 @@
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\obj\Debug\net8.0\Horizon Adventure Park.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\obj\Debug\net8.0\Horizon Adventure Park.AssemblyInfoInputs.cache
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\obj\Debug\net8.0\Horizon Adventure Park.AssemblyInfo.cs
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\obj\Debug\net8.0\Horizon Adventure Park.csproj.CoreCompileInputs.cache
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\bin\Debug\net8.0\Horizon Adventure Park.exe
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\bin\Debug\net8.0\Horizon Adventure Park.deps.json
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\bin\Debug\net8.0\Horizon Adventure Park.runtimeconfig.json
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\bin\Debug\net8.0\Horizon Adventure Park.dll
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\bin\Debug\net8.0\Horizon Adventure Park.pdb
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\obj\Debug\net8.0\Horizon Adventure Park.dll
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\obj\Debug\net8.0\refint\Horizon Adventure Park.dll
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\obj\Debug\net8.0\Horizon Adventure Park.pdb
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\obj\Debug\net8.0\Horizon Adventure Park.genruntimeconfig.cache
+C:\Users\YOUSEF\Documents\Dalil Training\Horizon Adventure Park\Horizon Adventure Park\obj\Debug\net8.0\ref\Horizon Adventure Park.dll
