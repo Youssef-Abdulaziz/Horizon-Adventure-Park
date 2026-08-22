@@ -4,84 +4,168 @@ using Horizon_Adventure_Park.Models;
 
 namespace Horizon_Adventure_Park.Services
 {
-    public class ThemeParkSystem
+    public class ParkSystem
     {
-        private readonly List<Visitor> visitors = new();
-        private readonly List<Ticket> tickets = new();
-        private readonly List<Ride> rides = new();
-        private readonly List<RideReservation> reservations = new();
-        private readonly List<Employee> employees = new();
-        private readonly List<StaffAssignment> assignments = new();
+        // Arrays
+        private Visitor[] visitors = new Visitor[100];
+        private Ticket[] tickets = new Ticket[100];
+        private Ride[] rides = new Ride[20];
+        private RideReservation[] reservations = new RideReservation[200];
+        private Employee[] employees = new Employee[50];
+        private StaffAssignment[] assignments = new StaffAssignment[100];
 
-        // Visitor operations
+        private int visitorCount = 0;
+        private int ticketCount = 0;
+        private int rideCount = 0;
+        private int reservationCount = 0;
+        private int employeeCount = 0;
+        private int assignmentCount = 0;
+
+
+        // VISITOR OPERATIONS
+
         public bool RegisterVisitor(Visitor visitor)
         {
-            if (visitors.Any(v => v.VisitorId == visitor.VisitorId))
+            if (visitorCount >= visitors.Length)
             {
-                Console.WriteLine("Registration failed: Visitor ID already exists.");
+                Console.WriteLine("Visitor storage is full.");
                 return false;
             }
 
-            visitors.Add(visitor);
+            // Prevent duplicate visitor IDs
+            for (int i = 0; i < visitorCount; i++)
+            {
+                if (visitors[i].VisitorId == visitor.VisitorId)
+                {
+                    Console.WriteLine(
+                        "Registration failed: Visitor ID already exists.");
+
+                    return false;
+                }
+            }
+
+            visitors[visitorCount] = visitor;
+            visitorCount++;
 
             Console.WriteLine("Visitor registered successfully.");
+
             return true;
         }
 
+
         public Visitor? FindVisitor(string visitorId)
         {
-            return visitors.FirstOrDefault(v => v.VisitorId == visitorId);
+            for (int i = 0; i < visitorCount; i++)
+            {
+                if (visitors[i].VisitorId == visitorId)
+                {
+                    return visitors[i];
+                }
+            }
+
+            return null;
         }
 
-        // Ticket operations
+
+        // TICKET OPERATIONS
+
         public bool IssueTicket(Ticket ticket)
         {
+            if (ticketCount >= tickets.Length)
+            {
+                Console.WriteLine("Ticket storage is full.");
+                return false;
+            }
+
             Visitor? visitor = FindVisitor(ticket.VisitorId);
 
             if (visitor == null)
             {
-                Console.WriteLine("Ticket issuance failed: Visitor does not exist.");
+                Console.WriteLine(
+                    "Ticket issuance failed: Visitor does not exist.");
+
                 return false;
             }
 
-            if (tickets.Any(t =>
-                t.VisitorId == ticket.VisitorId &&
-                t.Status == TicketStatus.Active))
+            // Check if visitor already has an active ticket
+            for (int i = 0; i < ticketCount; i++)
             {
-                Console.WriteLine("Visitor already has an active ticket.");
-                return false;
+                if (tickets[i].VisitorId == ticket.VisitorId &&
+                    tickets[i].IsValid())
+                {
+                    Console.WriteLine(
+                        "Visitor already has an active ticket.");
+
+                    return false;
+                }
             }
 
-            tickets.Add(ticket);
+            tickets[ticketCount] = ticket;
+            ticketCount++;
 
             Console.WriteLine("Ticket issued successfully.");
+
             return true;
         }
 
+
         public Ticket? FindActiveTicket(string visitorId)
         {
-            return tickets.FirstOrDefault(t =>
-                t.VisitorId == visitorId &&
-                t.IsValid());
+            for (int i = 0; i < ticketCount; i++)
+            {
+                if (tickets[i].VisitorId == visitorId &&
+                    tickets[i].IsValid())
+                {
+                    return tickets[i];
+                }
+            }
+
+            return null;
         }
 
-        // Ride operations
+
+        // RIDE OPERATIONS
+
         public void AddRide(Ride ride)
         {
-            if (rides.Any(r => r.RideId == ride.RideId))
+            if (rideCount >= rides.Length)
             {
-                Console.WriteLine("Ride ID already exists.");
+                Console.WriteLine("Ride storage is full.");
                 return;
             }
 
-            rides.Add(ride);
+            // Prevent duplicate ride IDs
+            for (int i = 0; i < rideCount; i++)
+            {
+                if (rides[i].RideId == ride.RideId)
+                {
+                    Console.WriteLine(
+                        "Ride ID already exists.");
+
+                    return;
+                }
+            }
+
+            rides[rideCount] = ride;
+            rideCount++;
+
             Console.WriteLine("Ride added successfully.");
         }
 
+
         public Ride? FindRide(string rideId)
         {
-            return rides.FirstOrDefault(r => r.RideId == rideId);
+            for (int i = 0; i < rideCount; i++)
+            {
+                if (rides[i].RideId == rideId)
+                {
+                    return rides[i];
+                }
+            }
+
+            return null;
         }
+
 
         public bool ValidateRideAccess(
             string visitorId,
@@ -92,7 +176,9 @@ namespace Horizon_Adventure_Park.Services
             if (visitor == null)
             {
                 Console.WriteLine("ACCESS DENIED");
-                Console.WriteLine("Reason: Visitor does not exist.");
+                Console.WriteLine(
+                    "Reason: Visitor does not exist.");
+
                 return false;
             }
 
@@ -101,7 +187,9 @@ namespace Horizon_Adventure_Park.Services
             if (ride == null)
             {
                 Console.WriteLine("ACCESS DENIED");
-                Console.WriteLine("Reason: Ride does not exist.");
+                Console.WriteLine(
+                    "Reason: Ride does not exist.");
+
                 return false;
             }
 
@@ -110,16 +198,20 @@ namespace Horizon_Adventure_Park.Services
             if (ticket == null)
             {
                 Console.WriteLine("ACCESS DENIED");
-                Console.WriteLine("Reason: Visitor does not have a valid ticket.");
+                Console.WriteLine(
+                    "Reason: Visitor does not have a valid ticket.");
+
                 return false;
             }
 
-            string result = ride.CheckEligibility(visitor, ticket);
+            string result =
+                ride.CheckEligibility(visitor, ticket);
 
             if (result != "Eligible")
             {
                 Console.WriteLine("ACCESS DENIED");
                 Console.WriteLine($"Reason: {result}");
+
                 return false;
             }
 
@@ -130,6 +222,7 @@ namespace Horizon_Adventure_Park.Services
             return true;
         }
 
+
         public void UpdateRideStatus(
             string rideId,
             RideStatus newStatus)
@@ -138,7 +231,9 @@ namespace Horizon_Adventure_Park.Services
 
             if (ride == null)
             {
-                Console.WriteLine("Ride does not exist.");
+                Console.WriteLine(
+                    "Ride does not exist.");
+
                 return;
             }
 
@@ -148,80 +243,119 @@ namespace Horizon_Adventure_Park.Services
                 $"Ride status updated to {newStatus}.");
         }
 
-        // Reservation operations
+
+        // RESERVATION OPERATIONS
+
         public bool CreateReservation(
             string visitorId,
             string rideId,
             string timeSlot)
         {
-            Visitor? visitor = FindVisitor(visitorId);
+            if (reservationCount >= reservations.Length)
+            {
+                Console.WriteLine(
+                    "Reservation storage is full.");
+
+                return false;
+            }
+
+            Visitor? visitor =
+                FindVisitor(visitorId);
 
             if (visitor == null)
             {
                 Console.WriteLine(
                     "RESERVATION FAILED");
+
                 Console.WriteLine(
                     "Reason: Visitor does not exist.");
+
                 return false;
             }
 
-            Ride? ride = FindRide(rideId);
+            Ride? ride =
+                FindRide(rideId);
 
             if (ride == null)
             {
                 Console.WriteLine(
                     "RESERVATION FAILED");
+
                 Console.WriteLine(
                     "Reason: Ride does not exist.");
+
                 return false;
             }
 
+            // Ride must be open
             if (ride.Status != RideStatus.Open)
             {
                 Console.WriteLine(
                     "RESERVATION FAILED");
+
                 Console.WriteLine(
                     $"Reason: Ride is {ride.Status}.");
+
                 return false;
             }
 
-            Ticket? ticket = FindActiveTicket(visitorId);
+            // Visitor must have a valid ticket
+            Ticket? ticket =
+                FindActiveTicket(visitorId);
 
             if (ticket == null)
             {
                 Console.WriteLine(
                     "RESERVATION FAILED");
+
                 Console.WriteLine(
                     "Reason: Visitor does not have a valid ticket.");
+
                 return false;
             }
 
-            bool duplicate = reservations.Any(r =>
-                r.VisitorId == visitorId &&
-                r.RideId == rideId &&
-                r.TimeSlot == timeSlot &&
-                r.Status == ReservationStatus.Active);
-
-            if (duplicate)
+            // Check duplicate reservation
+            for (int i = 0; i < reservationCount; i++)
             {
-                Console.WriteLine(
-                    "RESERVATION FAILED");
-                Console.WriteLine(
-                    "Reason: Visitor already has a reservation for this slot.");
-                return false;
+                if (reservations[i].VisitorId == visitorId &&
+                    reservations[i].RideId == rideId &&
+                    reservations[i].TimeSlot == timeSlot &&
+                    reservations[i].Status ==
+                    ReservationStatus.Active)
+                {
+                    Console.WriteLine(
+                        "RESERVATION FAILED");
+
+                    Console.WriteLine(
+                        "Reason: Visitor already has a reservation for this slot.");
+
+                    return false;
+                }
             }
 
-            int slotReservations = reservations.Count(r =>
-                r.RideId == rideId &&
-                r.TimeSlot == timeSlot &&
-                r.Status == ReservationStatus.Active);
+            // Count reservations for this ride and time slot
+            int slotReservations = 0;
 
+            for (int i = 0; i < reservationCount; i++)
+            {
+                if (reservations[i].RideId == rideId &&
+                    reservations[i].TimeSlot == timeSlot &&
+                    reservations[i].Status ==
+                    ReservationStatus.Active)
+                {
+                    slotReservations++;
+                }
+            }
+
+            // Check capacity
             if (slotReservations >= ride.MaxCapacity)
             {
                 Console.WriteLine(
                     "RESERVATION FAILED");
+
                 Console.WriteLine(
                     "Reason: Ride has reached maximum capacity for the selected time slot.");
+
                 return false;
             }
 
@@ -232,7 +366,8 @@ namespace Horizon_Adventure_Park.Services
                     rideId,
                     timeSlot);
 
-            reservations.Add(reservation);
+            reservations[reservationCount] = reservation;
+            reservationCount++;
 
             Console.WriteLine(
                 "RESERVATION CREATED");
@@ -240,68 +375,128 @@ namespace Horizon_Adventure_Park.Services
             return true;
         }
 
+
         public bool CancelReservation(
             string visitorId,
             string rideId,
             string timeSlot)
         {
-            RideReservation? reservation =
-                reservations.FirstOrDefault(r =>
-                    r.VisitorId == visitorId &&
-                    r.RideId == rideId &&
-                    r.TimeSlot == timeSlot &&
-                    r.Status == ReservationStatus.Active);
-
-            if (reservation == null)
+            for (int i = 0; i < reservationCount; i++)
             {
-                Console.WriteLine(
-                    "Reservation not found.");
-                return false;
+                if (reservations[i].VisitorId == visitorId &&
+                    reservations[i].RideId == rideId &&
+                    reservations[i].TimeSlot == timeSlot &&
+                    reservations[i].Status ==
+                    ReservationStatus.Active)
+                {
+                    reservations[i].Cancel();
+
+                    Console.WriteLine(
+                        "Reservation cancelled successfully.");
+
+                    return true;
+                }
             }
 
-            reservation.Cancel();
-
             Console.WriteLine(
-                "Reservation cancelled successfully.");
+                "Reservation not found.");
 
-            return true;
+            return false;
         }
 
-        // Staff operations
+
+        // EMPLOYEE OPERATIONS
+
+        public void AddEmployee(Employee employee)
+        {
+            if (employeeCount >= employees.Length)
+            {
+                Console.WriteLine(
+                    "Employee storage is full.");
+
+                return;
+            }
+
+            //Prevent duplicate employee IDs
+            for (int i = 0; i < employeeCount; i++)
+            {
+                if (employees[i].EmployeeId ==
+                    employee.EmployeeId)
+                {
+                    Console.WriteLine(
+                        "Employee ID already exists.");
+
+                    return;
+                }
+            }
+
+            employees[employeeCount] = employee;
+            employeeCount++;
+
+            Console.WriteLine(
+                "Employee added successfully.");
+        }
+
+
         public bool AssignEmployee(
             string employeeId,
             string rideId,
             string timePeriod)
         {
-            Employee? employee =
-                employees.FirstOrDefault(e =>
-                    e.EmployeeId == employeeId);
+            if (assignmentCount >= assignments.Length)
+            {
+                Console.WriteLine(
+                    "Assignment storage is full.");
+
+                return false;
+            }
+
+            Employee? employee = null;
+
+            // Find employee using array
+            for (int i = 0; i < employeeCount; i++)
+            {
+                if (employees[i].EmployeeId ==
+                    employeeId)
+                {
+                    employee = employees[i];
+                    break;
+                }
+            }
 
             if (employee == null)
             {
                 Console.WriteLine(
                     "Employee does not exist.");
+
                 return false;
             }
 
-            Ride? ride = FindRide(rideId);
+            // Check ride
+            Ride? ride =
+                FindRide(rideId);
 
             if (ride == null)
             {
                 Console.WriteLine(
                     "Ride does not exist.");
+
                 return false;
             }
 
-            bool conflict = assignments.Any(a =>
-                a.EmployeeId == employeeId &&
-                a.TimePeriod == timePeriod);
-
-            if (conflict)
+            // Check for conflicting assignment
+            for (int i = 0; i < assignmentCount; i++)
             {
-                Console.WriteLine(
-                    "Assignment failed: Employee is already assigned during this period.");
-                return false;
+                if (assignments[i].EmployeeId ==
+                    employeeId &&
+                    assignments[i].TimePeriod ==
+                    timePeriod)
+                {
+                    Console.WriteLine(
+                        "Assignment failed: Employee is already assigned during this period.");
+
+                    return false;
+                }
             }
 
             StaffAssignment assignment =
@@ -311,7 +506,8 @@ namespace Horizon_Adventure_Park.Services
                     rideId,
                     timePeriod);
 
-            assignments.Add(assignment);
+            assignments[assignmentCount] = assignment;
+            assignmentCount++;
 
             employee.SetAvailability(false);
 
@@ -319,22 +515,6 @@ namespace Horizon_Adventure_Park.Services
                 "Employee assigned successfully.");
 
             return true;
-        }
-
-        public void AddEmployee(Employee employee)
-        {
-            if (employees.Any(e =>
-                e.EmployeeId == employee.EmployeeId))
-            {
-                Console.WriteLine(
-                    "Employee ID already exists.");
-                return;
-            }
-
-            employees.Add(employee);
-
-            Console.WriteLine(
-                "Employee added successfully.");
         }
     }
 }
