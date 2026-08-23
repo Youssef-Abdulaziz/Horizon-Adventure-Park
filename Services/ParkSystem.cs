@@ -21,6 +21,9 @@ namespace Horizon_Adventure_Park.Services
         private int employeeCount = 0;
         private int assignmentCount = 0;
 
+        // Used to generate sequential ticket IDs (T001, T002, ...)
+        private int ticketSequence = 0;
+
 
         // VISITOR OPERATIONS
 
@@ -100,10 +103,15 @@ namespace Horizon_Adventure_Park.Services
                 }
             }
 
+            // Generate sequential Ticket ID: T001, T002, T003...
+            ticketSequence++;
+            ticket.TicketId = "T" + ticketSequence.ToString("D3");
+
             tickets[ticketCount] = ticket;
             ticketCount++;
 
             Console.WriteLine("Ticket issued successfully.");
+            Console.WriteLine($"Ticket ID: {ticket.TicketId}");
 
             return true;
         }
@@ -121,6 +129,65 @@ namespace Horizon_Adventure_Park.Services
             }
 
             return null;
+        }
+
+
+        public Ticket? FindTicketById(string ticketId)
+        {
+            for (int i = 0; i < ticketCount; i++)
+            {
+                if (tickets[i].TicketId == ticketId)
+                {
+                    return tickets[i];
+                }
+            }
+
+            return null;
+        }
+
+
+        public bool DeactivateTicket(string ticketId)
+        {
+            Ticket? ticket = FindTicketById(ticketId);
+
+            if (ticket == null)
+            {
+                Console.WriteLine("Ticket not found.");
+                return false;
+            }
+
+            if (ticket.Status == TicketStatus.Cancelled)
+            {
+                Console.WriteLine("Ticket is already deactivated.");
+                return false;
+            }
+
+            ticket.Deactivate();
+
+            Console.WriteLine("Ticket deactivated successfully.");
+
+            return true;
+        }
+
+
+        public bool UpdateTicketStatus(
+            string ticketId,
+            TicketStatus newStatus)
+        {
+            Ticket? ticket = FindTicketById(ticketId);
+
+            if (ticket == null)
+            {
+                Console.WriteLine("Ticket not found.");
+                return false;
+            }
+
+            ticket.Status = newStatus;
+
+            Console.WriteLine(
+                $"Ticket status updated to {newStatus}.");
+
+            return true;
         }
 
 
@@ -164,6 +231,29 @@ namespace Horizon_Adventure_Park.Services
             }
 
             return null;
+        }
+
+
+        public void ViewRideOccupancy()
+        {
+            if (rideCount == 0)
+            {
+                Console.WriteLine("No rides available.");
+                return;
+            }
+
+            Console.WriteLine(
+                $"{"Ride ID",-8}{"Name",-25}{"Status",-18}{"Occupancy",-12}{"Capacity"}");
+
+            Console.WriteLine(new string('-', 75));
+
+            for (int i = 0; i < rideCount; i++)
+            {
+                Ride ride = rides[i];
+
+                Console.WriteLine(
+                    $"{ride.RideId,-8}{ride.Name,-25}{ride.Status,-18}{ride.CurrentOccupancy,-12}{ride.MaxCapacity}");
+            }
         }
 
 

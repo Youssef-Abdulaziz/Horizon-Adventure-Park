@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Horizon Adventure Park")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+176b1b440da677bf07500356c83fbdf0629f415d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ad8d1f5cb0a825a634e3eabfdf20cfee7b24ee34")]
 [assembly: System.Reflection.AssemblyProductAttribute("Horizon Adventure Park")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Horizon Adventure Park")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

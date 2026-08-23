@@ -50,6 +50,22 @@ namespace Horizon_Adventure_Park
                         break;
 
                     case "7":
+                        CancelReservationMenu();
+                        break;
+
+                    case "8":
+                        ViewRideOccupancy();
+                        break;
+
+                    case "9":
+                        AddNewRide();
+                        break;
+
+                    case "10":
+                        ManageTicketStatus();
+                        break;
+
+                    case "11":
                         running = false;
 
                         Console.WriteLine();
@@ -64,7 +80,7 @@ namespace Horizon_Adventure_Park
                     default:
                         Console.WriteLine();
                         Console.WriteLine(
-                            "Invalid option. Please choose 1-7.");
+                            "Invalid option. Please choose 1-11.");
 
                         break;
                 }
@@ -118,7 +134,19 @@ namespace Horizon_Adventure_Park
                 "6. Assign Staff");
 
             Console.WriteLine(
-                "7. Exit");
+                "7. Cancel Reservation");
+
+            Console.WriteLine(
+                "8. View Ride Occupancy / Capacity");
+
+            Console.WriteLine(
+                "9. Add New Ride");
+
+            Console.WriteLine(
+                "10. Manage Ticket (Deactivate / Update Status)");
+
+            Console.WriteLine(
+                "11. Exit");
 
             Console.WriteLine(
                 "==============================================");
@@ -128,9 +156,9 @@ namespace Horizon_Adventure_Park
         }
 
 
-       
+
         // REGISTER VISITOR
-      
+
         static void RegisterVisitor()
         {
             Console.WriteLine();
@@ -275,7 +303,7 @@ namespace Horizon_Adventure_Park
         }
 
 
-       
+
         // ISSUE TICKET
 
         static void IssueTicket()
@@ -380,7 +408,7 @@ namespace Horizon_Adventure_Park
 
             Ticket ticket =
                 new Ticket(
-                    Guid.NewGuid().ToString(),
+                    "",           // Ticket ID is generated automatically by the system
                     visitorId,
                     type,
                     price,
@@ -392,7 +420,7 @@ namespace Horizon_Adventure_Park
 
 
         // VALIDATE RIDE ACCESS
-  
+
         static void ValidateRideAccess()
         {
             Console.WriteLine();
@@ -493,6 +521,65 @@ namespace Horizon_Adventure_Park
         }
 
 
+        // CANCEL RESERVATION
+
+        static void CancelReservationMenu()
+        {
+            Console.WriteLine();
+            Console.WriteLine(
+                "========== CANCEL RESERVATION ==========");
+
+            Console.Write(
+                "Enter Visitor ID: ");
+
+            string visitorId =
+                Console.ReadLine() ?? "";
+
+            if (string.IsNullOrWhiteSpace(visitorId))
+            {
+                Console.WriteLine(
+                    "Visitor ID cannot be empty.");
+
+                return;
+            }
+
+            Console.Write(
+                "Enter Ride ID: ");
+
+            string rideId =
+                Console.ReadLine() ?? "";
+
+            if (string.IsNullOrWhiteSpace(rideId))
+            {
+                Console.WriteLine(
+                    "Ride ID cannot be empty.");
+
+                return;
+            }
+
+            Console.Write(
+                "Enter Time Slot: ");
+
+            string timeSlot =
+                Console.ReadLine() ?? "";
+
+            if (string.IsNullOrWhiteSpace(timeSlot))
+            {
+                Console.WriteLine(
+                    "Time slot cannot be empty.");
+
+                return;
+            }
+
+            Console.WriteLine();
+
+            system.CancelReservation(
+                visitorId,
+                rideId,
+                timeSlot);
+        }
+
+
         // MANAGE RIDE STATUS
 
         static void ManageRideStatus()
@@ -578,6 +665,268 @@ namespace Horizon_Adventure_Park
             system.UpdateRideStatus(
                 rideId,
                 status);
+        }
+
+
+        // VIEW RIDE OCCUPANCY
+
+        static void ViewRideOccupancy()
+        {
+            Console.WriteLine();
+            Console.WriteLine(
+                "========== RIDE OCCUPANCY / CAPACITY ==========");
+
+            Console.WriteLine();
+
+            system.ViewRideOccupancy();
+        }
+
+
+        // ADD NEW RIDE
+
+        static void AddNewRide()
+        {
+            Console.WriteLine();
+            Console.WriteLine(
+                "========== ADD NEW RIDE ==========");
+
+            Console.Write(
+                "Enter Ride ID: ");
+
+            string rideId =
+                Console.ReadLine() ?? "";
+
+            if (string.IsNullOrWhiteSpace(rideId))
+            {
+                Console.WriteLine(
+                    "Ride ID cannot be empty.");
+
+                return;
+            }
+
+            Console.Write(
+                "Enter Ride Name: ");
+
+            string name =
+                Console.ReadLine() ?? "";
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Console.WriteLine(
+                    "Ride name cannot be empty.");
+
+                return;
+            }
+
+            Console.WriteLine();
+            Console.WriteLine(
+                "Ride Types:");
+
+            Console.WriteLine(
+                "1. Thrill");
+
+            Console.WriteLine(
+                "2. Water");
+
+            Console.WriteLine(
+                "3. Family");
+
+            int typeChoice =
+                ReadInt("Select ride type: ");
+
+            RideType type;
+
+            switch (typeChoice)
+            {
+                case 1:
+                    type =
+                        RideType.Thrill;
+                    break;
+
+                case 2:
+                    type =
+                        RideType.Water;
+                    break;
+
+                case 3:
+                    type =
+                        RideType.Family;
+                    break;
+
+                default:
+                    Console.WriteLine(
+                        "Invalid ride type.");
+
+                    return;
+            }
+
+            int minAge =
+                ReadInt("Enter Minimum Age: ");
+
+            if (minAge < 0)
+            {
+                Console.WriteLine(
+                    "Minimum age cannot be negative.");
+
+                return;
+            }
+
+            double minHeight =
+                ReadDouble("Enter Minimum Height (cm): ");
+
+            if (minHeight < 0)
+            {
+                Console.WriteLine(
+                    "Minimum height cannot be negative.");
+
+                return;
+            }
+
+            Console.Write(
+                "Requires Accompanying Adult? (y/n): ");
+
+            string adultAnswer =
+                Console.ReadLine()?
+                .Trim()
+                .ToLower() ?? "n";
+
+            bool requiresAdult = adultAnswer == "y";
+
+            int maxCapacity =
+                ReadInt("Enter Maximum Capacity: ");
+
+            if (maxCapacity <= 0)
+            {
+                Console.WriteLine(
+                    "Maximum capacity must be greater than 0.");
+
+                return;
+            }
+
+            Ride ride =
+                new Ride(
+                    rideId,
+                    name,
+                    type,
+                    minAge,
+                    minHeight,
+                    requiresAdult,
+                    maxCapacity);
+
+            system.AddRide(ride);
+        }
+
+
+        // MANAGE TICKET STATUS
+
+        static void ManageTicketStatus()
+        {
+            Console.WriteLine();
+            Console.WriteLine(
+                "========== MANAGE TICKET STATUS ==========");
+
+            Console.Write(
+                "Enter Ticket ID: ");
+
+            string ticketId =
+                Console.ReadLine() ?? "";
+
+            if (string.IsNullOrWhiteSpace(ticketId))
+            {
+                Console.WriteLine(
+                    "Ticket ID cannot be empty.");
+
+                return;
+            }
+
+            Ticket? ticket =
+                system.FindTicketById(ticketId);
+
+            if (ticket == null)
+            {
+                Console.WriteLine(
+                    "Ticket not found.");
+
+                return;
+            }
+
+            Console.WriteLine();
+            Console.WriteLine(
+                $"Visitor ID: {ticket.VisitorId}");
+
+            Console.WriteLine(
+                $"Type: {ticket.Type}");
+
+            Console.WriteLine(
+                $"Current Status: {ticket.Status}");
+
+            Console.WriteLine();
+            Console.WriteLine(
+                "1. Deactivate Ticket");
+
+            Console.WriteLine(
+                "2. Update Ticket Status");
+
+            int choice =
+                ReadInt("Select an option: ");
+
+            if (choice == 1)
+            {
+                system.DeactivateTicket(ticketId);
+            }
+            else if (choice == 2)
+            {
+                Console.WriteLine();
+                Console.WriteLine(
+                    "Ticket Status Options:");
+
+                Console.WriteLine(
+                    "1. Active");
+
+                Console.WriteLine(
+                    "2. Expired");
+
+                Console.WriteLine(
+                    "3. Cancelled");
+
+                int statusChoice =
+                    ReadInt("Select new status: ");
+
+                TicketStatus newStatus;
+
+                switch (statusChoice)
+                {
+                    case 1:
+                        newStatus =
+                            TicketStatus.Active;
+                        break;
+
+                    case 2:
+                        newStatus =
+                            TicketStatus.Expired;
+                        break;
+
+                    case 3:
+                        newStatus =
+                            TicketStatus.Cancelled;
+                        break;
+
+                    default:
+                        Console.WriteLine(
+                            "Invalid status.");
+
+                        return;
+                }
+
+                system.UpdateTicketStatus(
+                    ticketId,
+                    newStatus);
+            }
+            else
+            {
+                Console.WriteLine(
+                    "Invalid option.");
+            }
         }
 
 
