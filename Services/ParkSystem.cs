@@ -103,7 +103,7 @@ namespace Horizon_Adventure_Park.Services
                 }
             }
 
-            // Generate sequential Ticket ID: T001, T002, T003...
+            // Generate  Ticket ID: T001, T002, T003...
             ticketSequence++;
             ticket.TicketId = "T" + ticketSequence.ToString("D3");
 
